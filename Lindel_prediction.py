@@ -21,23 +21,29 @@ model_weights = pkl.load(open(os.path.join("./Lindel/Given_Model_Weights.pkl"),'
 label, rev_index, features = pkl.load(open(os.path.join('./data/feature_index_all.pkl'),'rb'))
 
 # Load in Data Matrix
-data = pd.read_csv("./data/Lindel_test.txt", sep='\t')
+data = pd.read_csv("./data/Lindel_test_65bp.csv", sep=',', index_col=0)
+
+predictions = {}
 
 # Generate predictions for each sequence
 for index, entry in data.iterrows():
 
     # Guide sequence
-    seq = str(entry[0])
-    features = entry[1:3034].values.astype(np.float64)
-    labels = entry[3034:].values.astype(np.float64)
+    guide = str(entry[0])
+    seq = str(entry[1])
+    features = entry[2:3035].values.astype(np.float32)
+    labels = entry[3035:].values.astype(np.float32)
 
-    y_hat = gen_prediction(seq, features, model_weights)
+    y_hat = gen_prediction(guide, seq, features, label, model_weights)
 
     # Get predictions for each of the 557 classes (probabilities sum up to 1)
     pred_freq = {}
     for i in range(len(y_hat)):
         if y_hat[i]!=0:
             pred_freq[rev_index[i]] = y_hat[i]
+
+    # Predictions in order of rev_index
+    predictions[guide] = np.array(list(pred_freq.values()))
     
     # Sort predictions in descending order
     pred_sorted = sorted(pred_freq.items(), key=lambda kv: kv[1],reverse=True)
