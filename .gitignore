@@ -133,3 +133,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+data/Lindel_test_65bp.csv
+
+data/Lindel_training_65bp.csv
