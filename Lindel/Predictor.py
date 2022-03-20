@@ -84,10 +84,6 @@ def onehotencoder(seq):
         encode[head_idx[seq[k:k+2]+str(k)]] =1.
     return encode
 
-if __name__ == '__main__':
-    guide = "CGGTCTCTATCAGTCCGGAA"
-    # oh = onehotencoder(guide)
-    # print("First 80 : ", oh[0:80])
 
 def gen_prediction(guide, seq, features, label, model_weights):
     '''generate the prediction for all classes, redundant classes will be combined'''
@@ -110,19 +106,12 @@ def gen_prediction(guide, seq, features, label, model_weights):
 
     # Get ratio of deletions and insertions
     dratio, insratio = softmax(np.dot(input_indel, w1) + b1)
-    print("RATIO's")
-    print(dratio, insratio)
-
 
     # Deletions
     deletions  = softmax(np.dot(features, w2) + b2)
 
     # Insertions
     insertions = softmax(np.dot(input_ins, w3) + b3)
-
-    print(insertions.shape, type(insertions))
-    print(insertions)
-    input(np.sum(insertions))
 
     # Scale deletions and insertions by their ratio's
 
