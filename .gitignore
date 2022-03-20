@@ -139,3 +139,5 @@ dmypy.json
 data/Lindel_test_65bp.csv
 
 data/Lindel_training_65bp.csv
+
+Lindel_ForeCasT_combined_training.txt
