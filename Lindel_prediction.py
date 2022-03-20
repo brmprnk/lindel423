@@ -49,3 +49,7 @@ for index, entry in data.iterrows():
     pred_sorted = sorted(pred_freq.items(), key=lambda kv: kv[1],reverse=True)
 
     # TODO: Do something with your predictions!
+
+# Save predictions to pickle
+with open('predictions_testset_givenweights_withcmax.pkl', 'wb') as handle:
+    pkl.dump(predictions, handle, protocol=pkl.HIGHEST_PROTOCOL)
