@@ -22,34 +22,50 @@ label, rev_index, features = pkl.load(open(os.path.join('./data/feature_index_al
 
 # Load in Data Matrix
 data = pd.read_csv("./data/Lindel_test_65bp.csv", sep=',', index_col=0)
+forecast = False
+
+# For ForeCast, uncomment the following lines
+# data = pd.read_csv("./data/Lindel_ForeCasT_testset_4000+samples.txt", sep='\t')
+# forecast = True
 
 predictions = {}
 
+print(len(data))
 # Generate predictions for each sequence
 for index, entry in data.iterrows():
 
-    # Guide sequence
-    guide = str(entry[0])
-    seq = str(entry[1])
-    features = entry[2:3035].values.astype(np.float32)
-    labels = entry[3035:].values.astype(np.float32)
+    if forecast:
+        guide = str(entry[0])
+        seq = ""
+        features = entry[1:3034].values.astype(np.float32)
+        labels = entry[3034:].values.astype(np.float32)
+    else:
+        # Guide sequence
+        guide = str(entry[0])
+        seq = str(entry[1])
+        features = entry[2:3035].values.astype(np.float32)
+        labels = entry[3035:].values.astype(np.float32)
 
     y_hat = gen_prediction(guide, seq, features, label, model_weights)
 
     # Get predictions for each of the 557 classes (probabilities sum up to 1)
     pred_freq = {}
+    # input()
     for i in range(len(y_hat)):
-        if y_hat[i]!=0:
-            pred_freq[rev_index[i]] = y_hat[i]
+        # if y_hat[i]!=0:
+        pred_freq[rev_index[i]] = y_hat[i]
 
     # Predictions in order of rev_index
     predictions[guide] = np.array(list(pred_freq.values()))
+
+    # print(pred_freq)
+    # input()
     
     # Sort predictions in descending order
-    pred_sorted = sorted(pred_freq.items(), key=lambda kv: kv[1],reverse=True)
+    # pred_sorted = sorted(pred_freq.items(), key=lambda kv: kv[1],reverse=True)
 
     # TODO: Do something with your predictions!
 
 # Save predictions to pickle
-with open('predictions_testset_givenweights_withcmax.pkl', 'wb') as handle:
+with open('predictions_forecast_givenweights.pkl', 'wb') as handle:
     pkl.dump(predictions, handle, protocol=pkl.HIGHEST_PROTOCOL)

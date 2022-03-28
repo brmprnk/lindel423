@@ -90,7 +90,8 @@ def gen_prediction(guide, seq, features, label, model_weights):
 
     w1,b1,w2,b2,w3,b3 = model_weights
 
-    cmax = gen_cmatrix(gen_indel(seq, 30), label)  # combine redundant classes
+    if seq != "":
+        cmax = gen_cmatrix(gen_indel(seq, 30), label)  # combine redundant classes
 
     # Get one-hot-encoded features
     input_indel = features[-384:]
@@ -114,8 +115,10 @@ def gen_prediction(guide, seq, features, label, model_weights):
     insertions = softmax(np.dot(input_ins, w3) + b3)
 
     # Scale deletions and insertions by their ratio's
-
-    y_hat = np.concatenate((deletions * dratio, insertions * insratio), axis=None).astype(np.float32) * cmax
+    if seq == "":
+        y_hat = np.concatenate((deletions * dratio, insertions * insratio), axis=None).astype(np.float32)
+    else:
+        y_hat = (np.concatenate((deletions * dratio, insertions * insratio), axis=None).astype(np.float32) * cmax).astype(np.float32)
 
     return y_hat
 
