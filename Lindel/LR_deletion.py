@@ -129,3 +129,8 @@ history = model.fit(x_train, y_train, epochs=100, validation_data=(x_valid, y_va
           callbacks=[EarlyStopping(patience=1)], verbose=0)
 
 model.save(workdir+'L2_del.h5')
+
+np.save("./results/vae697/beta0_h_dim[2091, 1394]_val_mean.npy",val_mean)
+np.save("./results/vae697/beta0_h_dim[2091, 1394]_val_std.npy", val_std)
+np.save("./results/vae697/beta0_h_dim[2091, 1394]_val_min.npy", val_min)
+np.save("./results/vae697/beta0_h_dim[2091, 1394]_val_max.npy", val_max)
